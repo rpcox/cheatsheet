@@ -30,7 +30,7 @@
 
 #### List
 
-#!/bin/bash
+    #!/bin/bash
 
     echo "INSTALLTIME             NAME-VERSION-RELEASE         SUMMARY"
     echo "-----------             --------------------         -------"
