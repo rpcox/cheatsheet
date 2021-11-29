@@ -19,6 +19,10 @@
         \( -perm -4000 -fprintf ~/suid.txt '%#m %u %g %p\n' \) ,  \
         \( -perm -2000 -fprintf ~/sgid.txt '%#m %u %g %p\n' \)
 
+#### find sticky bit set directories
+
+    find /tmp -type d -perm -1000
+
 #### find world writeable files
 
     find /etc -type f -perm /002
