@@ -66,6 +66,7 @@
 ### loop through w/ sorted values
 
     $ declare -A AA=( [yamaha]=fz10 [suzuki]=gsxr750 [kawasaki]=z10 )
+    $ sorted_keys=$(echo "${!AA[@]}" | tr ' ' '\n' | sort)
     $ sorted_values=$(echo ${AA[@]} | tr ' ' '\n' | sort)
     $ for v in $sorted_values; do for k in $sorted_keys; do if [ ${AA[$k]} == $v ]; then echo "k=$k v=${AA[$k]}"; fi; done; done
     k=yamaha v=fz10
