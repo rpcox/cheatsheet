@@ -38,6 +38,16 @@
     git diff main..poc        # show the diff of what is in branch poc, but is not on branch main
     git show [SHA]            # show any object in git in human readable format
 
+    git log --pretty=oneline  # git log entries as brief one liners
+
+    # a log format w/ a little more readability
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # make an alias for the log format above
+    git config --global alias.logline "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    # then
+    git logline
+
 #### delete or move
 
     git rm [file]                             # delete file from project and stage removal for commit
