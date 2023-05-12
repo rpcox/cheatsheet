@@ -10,7 +10,7 @@
     openssl genrsa -out key.pem 4096               # legacy
     openssl genpkey -algorithm rsa -out key.pem -pkeyopt rsa_keygen_bits:4096
 
-### Generate AES256 encrypted 4096 bit password protected RSA key 
+### Generate AES256 encrypted 4096 bit password protected RSA key
 
     openssl genrsa -aes256 -passout pass:foobar -out key.pem 4096        # legacy
     openssl genpkey -algorithm rsa -aes256 -pass pass:foobar -out key.pem -pkeyopt rsa_keygen_bits:4096
@@ -39,7 +39,7 @@
     env:VAR        - read from environment variable named 'VAR'
     file:path2file - read from file
     fd:number      - read from file descripter 'number'
-    stdin          - read from stdin 
+    stdin          - read from stdin
 
 ### Generate a CSR from an existing private key
 
@@ -61,4 +61,27 @@
 
      openssl x509 -in cert.pem -inform PEM -out cert.der -outform DER
 
+### Print the certificate subject
+
+     openssl x509 -subject -noout -in cert.pem
+
+### Print the certificate SAN
+
+     openssl x509 -noout -text -in cert.pem | grep -A 1 Alt | grep DN | sed -r 's/^ +//'
+
+### Print the certificate start/begin date
+
+     openssl x509 -startdate -noout -in cert.pem | cut -d '=' -f2
+
+### Print the certificate end date
+
+     openssl x509 -enddate -noout -in cert.pem | cud -d '=' -f 2
+
+### Print the certificate serial number
+
+     openssl x509 -serial -noout -in cert.pem | cut =d '=' -f 2
+
+### Print the certificate issuer
+
+     openssl x509 -issuer -noout -in cert.pem
 
