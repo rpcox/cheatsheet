@@ -79,3 +79,12 @@
     git stash pop     # pop a stash off the stack to the working directory (return most recent stash)
     git stash drop    # discard the changes from the top of stack (drop most recent stash)
 
+#### tagging
+
+    git tag <tag-name>                   # create a tag
+    git tag -a <tag> -m "message"        # create annotated tag
+    git tag -a <tag> HEAD -m "message"   # create annotated tag for last commit
+    git tag                              # list tags
+    git tag -n                           # add details
+    git describe                         # get the latest tag
+    git checkout tags/<tag> -b <branch>  # checkout a tag
