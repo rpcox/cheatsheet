@@ -88,3 +88,14 @@
     git tag -n                           # add details
     git describe                         # get the latest tag
     git checkout tags/<tag> -b <branch>  # checkout a tag
+
+#### branch/merge
+
+    git branch NEWBRANCH                        # create a new branch
+    git checkout BRANCH                         # or in one step ( git checkout -b NEWBRANCH )
+    # modify add ...
+    git checkout main                           # go back to main
+    git merge BRANCH                            # merge changes
+
+    git log --oneline --decorate                # see where branch pointers are pointing
+    git log --oneline --decorate --graph --all  # see where branch pointers and  history divergence
