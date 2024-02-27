@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "INSTALLTIME                 NAME-VERSION-RELEASE         SUMMARY"
+echo "-----------                 --------------------         -------"
+
+rpm -q gpg-pubkey --qf '%{INSTALLTIME\t%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'
+while read epoch key remainder; do
+	printf "%s %s %s\t%s\t" $(date -u --date="@$epoch" +'%F %T %z') $key
+	echo $remainder
+done
