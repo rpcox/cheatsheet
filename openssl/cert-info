@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+	echo "usage: cert-info CERTIFUCATE"
+	exit 1
+fi
+
+if [ -e $1 ]; then
+	printf "   File: %s\n" $1
+	printf "Subject: %s\n" $(openssl x509 -subject -noout -in $1)
+	printf "    SAN: %s\n" $(openssl x509 -noout -text -in $1 | grep -A 1 Alt | grep DN | sed -r 's/^ +//')
+	printf "    SAN: %s\n" $(openssl x509 -startdate -noout -in $1 | cut -d '=' -f 2)
+	printf "    SAN: %s\n" $(openssl x509 -enddate -noout -in $1 | cut -d '=' -f 2)
+	printf "    SAN: %s\n" $(openssl x509 -serial -noout -in $1 | cut -d '=' -f 2)
+	printf "    SAN: %s\n" $(openssl x509 -issuer -noout -in $1)
+	printf "    SAN: %s\n" $(md5sum $1 | cut -d ' ' -f 1 | tr 'a-z' 'A-Z')
+else
+	echo "$1 not found"
+	exit 1
+fi
