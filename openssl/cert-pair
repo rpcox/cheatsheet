@@ -1,0 +1,86 @@
+#!/bin/bash
+
+GREEN='\033[0;32m]'
+NONE='\033[0;0m]'
+RED='\033[0;31m]'
+
+show_modulus_md5=0
+
+function usage {
+cat<<EOF
+
+    NAME
+	cert-pair - check for correct certificate and private key pairing
+
+    SYNOPSIS
+	cert-pair -c CERTIFICATE -k PRIVATE-KEY [ -p PASS-PHRASE ]
+
+    DESCRIPTION
+	Determine if the certificate and the private key are a matched pair by
+	comparing the MD5 hash of the modulus.
+
+	-c CERTIFICATE
+		Path to the certificate. The certificate MUST be in PEM format.
+
+	-k PRIVATE-KEY
+		Path to the private key. The private key file MUST be in PEM format.
+
+	-p PASS-PHRASE
+		The pass-phrase may NOT be passed on the command line, but MUST
+		be contained in a file. Necessary is key is locked/encrypted.
+
+	-s
+		Present the modulus MD5 values
+
+    EXIT STATUS
+		0	OK
+		!0	Error
+
+    EXAMPLE
+	cert-pair -c /path/to/cert.pem -k ../path/to/private.key
+
+EOF
+	exit $1
+}
+
+while getopts ":hc:k:p:s" opt; do
+	case ${opt} in
+		c) CERT=${OPTARG};;
+		k) KEY=${OPTARG};;
+		p) PASS=${OPTARG};;
+		s) show_modulus_md5=1;;
+		h) usage 0;;
+		*) echo "Error: Invalid option"; usage 1;;
+	esac
+done
+
+if [[ -z $CERT || -z $KEY ]]; then echo "Error: Missing required option"; usage 2; fi
+
+for f in $CERT $KEY; do
+	if ! [ -e $f ]; then
+		echo "$f does not exist"
+		exit 3
+	elif ! [ -f $f ]; then
+		echo "$f is not a regular file"
+		exit 4
+	fi
+
+	openssl md5 $f | cut -d ' ' -f2 | tr 'a-z' 'A-Z' | tr '\n' '\t' | echo "(MD5-file) $f"
+done
+
+CERT_MODULUS_MD5=$(openssl x509 -noout -modulus -in $CERT | openssl md5 | awk '{print $2}'
+
+if [ -z $PASS ]; then
+	KEY_MODULUS_MD5=$(openssl rsa -noout -modulus -in $KEY | openssl md5 | awk '{print $2}'
+else
+	KEY_MODULUS_MD5=$(openssl rsa -noout -modulus -in $KEY -passin file:$PASS | openssl md5 | awk '{print $2}'
+fi
+
+if [[ $CERT_MODULUS_MD5 == $KEY_MODULUS_MD5 ]]; then
+	echo -e "${GREEN}MATCH${NONE}"
+else
+	echo -e "${RED}MISMATCH${NONE}"
+	exit 5
+fi
+
+exit 0
