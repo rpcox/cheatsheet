@@ -1,0 +1,27 @@
+#!/bin/bash
+
+declare -A ARRAY
+
+while read line; do
+	for word in $line; do
+		trimmed_word=$(echo $word | sed 's/\ \.\,//g' | tr 'A-Z' 'a-z' | tr -d '\n')
+		if [[ -n ${ARRAY[$trimmed_word]} ]]; then
+			ARRAY[$trimmed_word]=$(( ${ARRAY[$trimmed_word]} + 1 ))
+		else
+			ARRAY[$trimmed_word]=1
+		fi
+	done
+done<text
+
+
+sorted_keys=$( echo "${!ARRAY[@]}" | tr ' ' '\n' | sort | tr '\n' ' ' )
+sorted_values=$( echo "${ARRAY[@]}" | tr ' ' '\n' | sort -r -n | tr '\n' ' ' )
+
+for v in $sorted_values; do
+	for k in $sorted_keys; do
+		if [[ ${ARRAY[$k]} == $v ]]; then
+			printf "%6d  %s\n" ${ARRAY[$k]} $k
+			unset ARRAY[$k]
+		fi
+	done
+done
